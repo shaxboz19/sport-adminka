@@ -32,10 +32,9 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     'ant-design-vue/dist/antd.css',
-    'static/fonts/ALS-hauss/stylesheet.css',
-    'static/fonts/Rubik/stylesheet.css',
-    'static/fonts/icomoon/style.css',
-    'static/css/main.css',
+    '~/assets/icons/fontawesome/css/all.css',
+    '~/assets/raleway-prezi/stylesheet.css',
+    '~/assets/scss/main.scss',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
