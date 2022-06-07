@@ -31,14 +31,15 @@
         Show more
       </nuxt-link>
     </div>
-    <div class="page-body _1">
+    <div class="page-body_1">
       <div class="page-body-calendar">
-        <a-calendar :fullscreen="false" @panelChange="onPanelChange" />
+        <!-- <a-calendar :fullscreen="false" :locale="ru" @panelChange="onPanelChange" /> -->
+        <vc-calendar v-model="selectDate" locale="ru" is-expanded></vc-calendar>
       </div>
       <div class="gmt-time">
         <i class="fa-solid fa-earth-asia"></i>
         <a-form-item label="GMT">
-          <a-select @change="handleChange">
+          <a-select   style="width: 75px"  @change="handleChange">
             <a-select-option v-for="i in 25" :key="(i + 9).toString(36) + i">
               {{ (i + 9).toString(36) + i }}
             </a-select-option>
@@ -53,8 +54,16 @@
 </template>
 
 <script>
+import {en, ru} from '~/utils/calendarLocale.js'
 export default {
   name: "IndexPage",
+  data() {
+    return {
+      en,
+      ru,
+      selectDate: null
+    }
+  },
 
   methods: {
     onPanelChange(value, mode) {
@@ -69,3 +78,8 @@ export default {
 
 
 </script>
+<style >
+  .gmt-select{
+    width: 75px;
+  }
+</style>
