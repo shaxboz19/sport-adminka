@@ -1,85 +1,93 @@
 <template>
   <div class="page _1">
     <div class="page-header _1">
-      <span>Slobodskoj Oleg</span>
-      <h1>Установка Решения из Каталога</h1>
+      <span>{{ getClient && getClient.name }}</span>
+      <h1>{{ getVariables && getVariables.title }}</h1>
       <ul>
         <li>
           <i class="fa-regular fa-clock"></i>
-          <span>30 min</span>
+          <span>{{ getVariables && getVariables.duration }} min</span>
         </li>
         <li>
-          <i class="fa-solid fa-video"></i>
-          <span>
-            Web conferencing details provided upon
-            confirmation.
-          </span>
+          <!-- <i class="fa-solid fa-video"></i> -->
+          <span> {{ getVariables && getVariables.description }} </span>
         </li>
         <li>
           <span>
-            В рамках звонка в Zoom наш специалисть сможет ответить на все вопросы
+            {{ getVariables && getVariables.messageText }}
           </span>
-          <ul>
+          <!-- <ul>
             <li>
-              <span>Установить готовое решение на <small>аккаунт клиента</small></span>
+              <span
+                >Установить готовое решение на
+                <small>аккаунт клиента</small></span
+              >
             </li>
-          </ul>
-
+          </ul> -->
         </li>
       </ul>
-      <nuxt-link to="/">
-        Show more
-      </nuxt-link>
+      <!-- <nuxt-link to="/"> Show more </nuxt-link> -->
     </div>
     <div class="page-body_1">
       <div class="page-body-calendar">
         <!-- <a-calendar :fullscreen="false" :locale="ru" @panelChange="onPanelChange" /> -->
-        <vc-calendar v-model="selectDate" locale="ru" is-expanded></vc-calendar>
+        <client-only>
+          <vc-date-picker
+            v-model="selectDate"
+            locale="ru"
+            is-expanded
+          ></vc-date-picker>
+        </client-only>
       </div>
-      <div class="gmt-time">
+      <!-- <div class="gmt-time">
         <i class="fa-solid fa-earth-asia"></i>
         <a-form-item label="GMT">
-          <a-select   style="width: 75px"  @change="handleChange">
+          <a-select style="width: 75px" @change="handleChange">
             <a-select-option v-for="i in 25" :key="(i + 9).toString(36) + i">
               {{ (i + 9).toString(36) + i }}
             </a-select-option>
           </a-select>
         </a-form-item>
-      </div>
+      </div> -->
     </div>
-
-
   </div>
-
 </template>
 
 <script>
-import {en, ru} from '~/utils/calendarLocale.js'
+import { en, ru } from "~/utils/calendarLocale.js";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "IndexPage",
   data() {
     return {
       en,
       ru,
-      selectDate: null
-    }
+      selectDate: new Date(),
+    };
   },
-
+  mounted() {},
   methods: {
     onPanelChange(value, mode) {
       console.log(value, mode);
     },
     handleChange(e) {
-      console.log(e)
-    }
+      console.log(e);
+    },
   },
-
-}
-
-
+  computed: {
+    ...mapGetters("home", ["getClient", "getVariables"]),
+    ...mapState(["client"]),
+  },
+  watch: {
+    selectDate(val) {
+      const date = this.$moment(val).format("DD-MM-YYYY");
+      this.$router.push({ name: "page2", query: { date } });
+    },
+  },
+};
 </script>
-<style >
-  .gmt-select{
-    width: 75px;
-  }
+<style>
+.gmt-select {
+  width: 75px;
+}
 </style>
