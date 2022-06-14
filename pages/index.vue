@@ -35,6 +35,8 @@
           <vc-date-picker
             v-model="selectDate"
             locale="ru"
+            :attributes="attributes"
+            :available-dates="availableDates"
             is-expanded
           ></vc-date-picker>
         </client-only>
@@ -62,10 +64,25 @@ export default {
     return {
       en,
       ru,
-      selectDate: new Date(),
+      selectDate: null, 
+       attributes: [],
+       availableDates: []
     };
   },
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+  this.getVariables.slots.forEach((element, i) => {
+      this.attributes.push({
+        key: i,
+        highlight: true,
+        dates: new Date(element)
+      })
+      this.availableDates.push(new Date(element))
+    });
+    
+    }, 300)
+   
+  },
   methods: {
     onPanelChange(value, mode) {
       console.log(value, mode);
