@@ -4,7 +4,7 @@
   </div>
   <div v-else class="error-message">
     Что-то пошло не так попробуйте перезапустить
-    <a href="https://t.me/bot_marketing_demos_bot" target="_blank">
+    <a :href="`https://t.me/${link}`" target="_blank">
       телеграм бота</a
     >
   </div>
@@ -14,9 +14,13 @@
 import { mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      link: null
+    };
   },
   mounted() {
+    
+    this.link = "bot_marketing_demos_bot"
     if (this.$route.query.client) {
       this.$store.commit("setClient", this.$route.query.client);
       localStorage.setItem("client", this.$route.query.client);
@@ -28,7 +32,8 @@ export default {
   },
   methods: {
     async getDetail() {
-      const { variables } = await this.$store.dispatch(
+      try {
+ const { variables } = await this.$store.dispatch(
         "home/getDetail",
         this.client
       );
@@ -36,6 +41,10 @@ export default {
       if (!variables) {
         this.$store.commit("setError", true);
       }
+      } catch(e) {
+        console.log(e);
+      }
+     
     },
   },
   computed: {
