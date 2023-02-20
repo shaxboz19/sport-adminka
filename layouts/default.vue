@@ -1,12 +1,10 @@
 <template>
-  <div class="wrapper" v-if="!isError">
+  <div class="wrapper" v-if="!isError && isLoad">
     <Nuxt />
   </div>
   <div v-else class="error-message">
     Что-то пошло не так попробуйте перезапустить
-    <a :href="`https://t.me/${link}`" target="_blank">
-      телеграм бота</a
-    >
+    <a :href="`https://t.me/${link}`" target="_blank"> телеграм бота</a>
   </div>
 </template>
 
@@ -15,36 +13,37 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      link: null
+      link: null,
+      isLoad: false,
     };
   },
-  mounted() {
-    
-    this.link = "bot_marketing_demos_bot"
+  async mounted() {
+    this.isLoad = false;
+    this.link = "bot_marketing_demos_bot";
     if (this.$route.query.client) {
       this.$store.commit("setClient", this.$route.query.client);
       localStorage.setItem("client", this.$route.query.client);
     }
-    this.getDetail();
+    await this.getDetail();
     if (!localStorage.getItem("client")) {
       this.$store.commit("setError", true);
     }
+    this.isLoad = true;
   },
   methods: {
     async getDetail() {
       try {
- const { variables } = await this.$store.dispatch(
-        "home/getDetail",
-        this.client
-      );
+        const { variables } = await this.$store.dispatch(
+          "home/getDetail",
+          this.client
+        );
 
-      if (!variables) {
-        this.$store.commit("setError", true);
-      }
-      } catch(e) {
+        if (!variables) {
+          this.$store.commit("setError", true);
+        }
+      } catch (e) {
         console.log(e);
       }
-     
     },
   },
   computed: {

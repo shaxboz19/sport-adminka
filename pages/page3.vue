@@ -23,32 +23,76 @@
         </li> -->
       </ul>
     </div>
-    <div class="page-body _1">
+    <div class="page-body _1" v-if="inputs">
       <div class="page-body-form">
         <h2>Введите дополнительные данные</h2>
         <a-row :gutter="[0, 16]">
-          <!-- <a-col span="24">
-            <a-form-item label="Name">
-              <a-input> </a-input>
+          <a-col span="24" v-if="inputs.name">
+            <a-form-item label="Имя">
+              <a-input
+                v-model="form.name"
+                :class="{
+                  error: $v.form.name.$dirty && !$v.form.name.required,
+                }"
+              ></a-input>
             </a-form-item>
-          </a-col> -->
-          <!-- <a-col span="24">
+            <div
+              class="error"
+              v-if="$v.form.name.$dirty && !$v.form.name.required"
+            >
+              Обязательное поле
+            </div>
+          </a-col>
+          <a-col span="24" v-if="inputs.email">
             <a-form-item label="Email">
-              <a-input> </a-input>
+              <a-input
+                v-model="form.email"
+                :class="{
+                  error: $v.form.email.$dirty && !$v.form.email.required,
+                }"
+              >
+              </a-input>
             </a-form-item>
+            <div
+              class="error"
+              v-if="$v.form.email.$dirty && !$v.form.email.required"
+            >
+              Обязательное поле
+            </div>
           </a-col>
-          <a-col span="24">
-            <a-button type="primary" class="blue">Add guests</a-button>
-          </a-col>
-          <a-col span="24">
-            <a-form-item label="Phone">
-              <a-input> </a-input>
+          <a-col span="24" v-if="inputs.phone">
+            <a-form-item label="Телефон">
+              <a-input
+                v-model="form.phone"
+                :class="{
+                  error: $v.form.phone.$dirty && !$v.form.phone.required,
+                }"
+              >
+              </a-input>
             </a-form-item>
-          </a-col> -->
-          <a-col span="24">
+            <div
+              class="error"
+              v-if="$v.form.phone.$dirty && !$v.form.phone.required"
+            >
+              Обязательное поле
+            </div>
+          </a-col>
+          <a-col span="24" v-if="inputs.comment">
             <a-form-item label="Комментарий">
-              <a-textarea v-model="form.comment"> </a-textarea>
+              <a-textarea
+                v-model="form.comment"
+                :class="{
+                  error: $v.form.comment.$dirty && !$v.form.comment.required,
+                }"
+              >
+              </a-textarea>
             </a-form-item>
+            <div
+              class="error"
+              v-if="$v.form.comment.$dirty && !$v.form.comment.required"
+            >
+              Обязательное поле
+            </div>
           </a-col>
           <a-col span="24">
             <a-button type="primary" class="blue" @click="onSubmit"
@@ -64,21 +108,38 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "IndexPage",
   data() {
     return {
       form: {
+        name: "",
+        email: "",
+        phone: "",
         comment: "",
       },
       endTime: null,
       startTime: null,
       date: null,
       isClose: false,
+      inputs: null,
+    };
+  },
+  validations() {
+    const form = {};
+
+    for (const key in this.form) {
+      if (this.getVariables.input[key]) {
+        form[key] = { required };
+      }
+    }
+    return {
+      form,
     };
   },
   mounted() {
+    this.inputs = this.getVariables.input;
     this.startTime = this.$route.query.time;
     this.date = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(
       "dddd MMM Do YYYY"
@@ -99,28 +160,32 @@ export default {
       console.log(e);
     },
     async onSubmit() {
-      try {
-        console.log(this.$route.query.date);
-        const date = this.$moment(
-          this.$route.query.date + " " + this.$route.query.time,
-          "DD-MM-YYYY HH-mm"
-        ).format("DD-MM-YYYY HH:mm");
-        const form = {
-          targetDate: date,
-          ...this.form,
-        };
-        const { data } = await this.$axios.post(`/${this.client}/request`, {
-          code: "submit",
-          params: {
-            ...form,
-          },
-        });
-        this.isClose = true;
-      } catch (error) {
-        const {
-          data: { message },
-        } = error.response;
-        this.errorHandler(message);
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        console.log("2222");
+        try {
+          console.log(this.$route.query.date);
+          const date = this.$moment(
+            this.$route.query.date + " " + this.$route.query.time,
+            "DD-MM-YYYY HH-mm"
+          ).format("DD-MM-YYYY HH:mm");
+          const form = {
+            targetDate: date,
+            ...this.form,
+          };
+          const { data } = await this.$axios.post(`/${this.client}/request`, {
+            code: "submit",
+            params: {
+              ...form,
+            },
+          });
+          this.isClose = true;
+        } catch (error) {
+          const {
+            data: { message },
+          } = error.response;
+          this.errorHandler(message);
+        }
       }
     },
   },
@@ -131,3 +196,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.error {
+  color: red;
+  border-color: red;
+}
+</style>

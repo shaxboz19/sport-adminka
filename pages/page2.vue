@@ -42,7 +42,7 @@
                     class="blue"
                     @click="clickTime(item)"
                   >
-                    Подтверждать
+                    Подтвердить
                   </a-button>
                 </a-col>
               </a-row>
@@ -66,10 +66,18 @@ export default {
     };
   },
   mounted() {
-    this.getVariables.slots.forEach((i) => {
+    const selectDate = new Date(
+      this.$moment(this.$route.query.date, "DD-MM-YYYY")._d
+    ).getDate();
+
+    const dates = this.getVariables.slots.filter((e) => {
+      return new Date(e).getDate() == selectDate;
+    });
+
+    dates.forEach((i) => {
       this.times.push({
         isActive: false,
-        time: this.$moment(i).format("HH:mm"),
+        time: this.$moment(i).utcOffset("+0300").format("HH:mm"),
       });
     });
     this.weekDay = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(

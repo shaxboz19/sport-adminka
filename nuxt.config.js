@@ -45,6 +45,9 @@ export default {
       src: "@/plugins/error.js",
       mode: "client"
     },
+    {
+      src: './plugins/vuelidate.js'
+    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
