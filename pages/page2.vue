@@ -1,7 +1,7 @@
 <template>
   <div class="page _2">
     <div class="page-header _2">
-      <h1>{{ weekDay }}</h1>
+      <h1 class="text-cap">{{ weekDay }}</h1>
       <h2>{{ date }}</h2>
       <!-- <div class="gmt-time">
         <i class="fa-solid fa-earth-asia"></i>
@@ -84,7 +84,7 @@ export default {
       "dddd"
     );
     this.date = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(
-      "MMM Do YYYY"
+      "Do MMM YYYY"
     );
   },
   methods: {
@@ -109,4 +109,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.text-cap {
+  text-transform: capitalize;
+}
+</style>

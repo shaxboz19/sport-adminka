@@ -13,9 +13,9 @@
           <span> {{ getVariables && getVariables.description }} </span>
         </li>
         <li>
-          <span>
+          <!-- <span>
             {{ getVariables && getVariables.messageText }}
-          </span>
+          </span> -->
           <!-- <ul>
             <li>
               <span
@@ -64,24 +64,26 @@ export default {
     return {
       en,
       ru,
-      selectDate: null, 
-       attributes: [],
-       availableDates: []
+      selectDate: null,
+      attributes: [],
+      availableDates: [],
     };
   },
   mounted() {
     setTimeout(() => {
-  this.getVariables.slots.forEach((element, i) => {
-      this.attributes.push({
-        key: i,
-        highlight: true,
-        dates: new Date(element)
-      })
-      this.availableDates.push(new Date(element))
-    });
-    
-    }, 300)
-   
+      this.getVariables.slots.forEach((element, i) => {
+        // this.attributes.push({
+        //   key: i,
+        //   highlight: true,
+        //   dates: new Date(element),
+        // });
+        this.availableDates.push({
+          start: new Date(element),
+          end: new Date(element),
+        });
+        console.log(this.availableDates);
+      });
+    }, 300);
   },
   methods: {
     onPanelChange(value, mode) {
