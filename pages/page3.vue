@@ -14,7 +14,9 @@
         </li>
         <li>
           <i class="fa-regular fa-calendar"></i>
-          <span> {{ startTime }} - {{ endTime }}, {{ date }} </span>
+          <span> {{ startTime }} - {{ endTime }}, </span>
+          <span class="text-cap"> {{ weekDay }} </span>
+          <span>{{ date }} </span>
         </li>
         <!-- <li>
           <i class="fa-solid fa-earth-asia"></i>
@@ -96,14 +98,14 @@
           </a-col>
           <a-col span="24">
             <a-button type="primary" class="blue" @click="onSubmit"
-              >Отправить</a-button
+              >Подтвердить</a-button
             >
           </a-col>
         </a-row>
       </div>
     </div>
   </div>
-  <div v-else class="error-message">Дата успешно перенесена</div>
+  <div v-else class="error-message">Выполнено</div>
 </template>
 
 <script>
@@ -124,6 +126,7 @@ export default {
       date: null,
       isClose: false,
       inputs: null,
+      weekDay: null,
     };
   },
   validations() {
@@ -141,8 +144,9 @@ export default {
   mounted() {
     this.inputs = this.getVariables.input;
     this.startTime = this.$route.query.time;
-    this.date = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(
-      "dddd MMM Do YYYY"
+    this.date = this.$moment(this.$route.query.date, "DD-MM-YYYY").format("LL");
+    this.weekDay = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(
+      "dddd"
     );
     const date = this.$route.query.date;
     const time = this.$route.query.time;
@@ -201,5 +205,8 @@ export default {
 .error {
   color: red;
   border-color: red;
+}
+.text-cap {
+  text-transform: capitalize;
 }
 </style>

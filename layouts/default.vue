@@ -1,6 +1,8 @@
 <template>
-  <div class="wrapper" v-if="!isError && isLoad">
-    <Nuxt />
+  <div class="wrapper" v-if="!isError">
+    <template v-if="isLoad">
+      <Nuxt />
+    </template>
   </div>
   <div v-else class="error-message">
     Что-то пошло не так попробуйте перезапустить

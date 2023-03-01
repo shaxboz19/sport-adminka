@@ -83,9 +83,7 @@ export default {
     this.weekDay = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(
       "dddd"
     );
-    this.date = this.$moment(this.$route.query.date, "DD-MM-YYYY").format(
-      "Do MMM YYYY"
-    );
+    this.date = this.$moment(this.$route.query.date, "DD-MM-YYYY").format("LL");
   },
   methods: {
     onClickTime(index) {
